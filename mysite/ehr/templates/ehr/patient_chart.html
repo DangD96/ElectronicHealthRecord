@@ -1,0 +1,88 @@
+{% extends "ehr/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div id="patientInfoSidebar">
+        <div>{% if patient.photo %}
+            <img src="{{ patient.photo.url }}" alt="{{ patient.first_name}}" width="50%" height="150">
+        {% else %}
+            <h3 class="no_photo" width="50%" height="150">No photo available</h3>
+        {% endif %}
+        </div>
+        <div id="patientID" hidden="true">{{ patient.id }}</div>
+        <div>First Name: {{ patient.first_name }}</div>
+        <div>Last Name: {{ patient.last_name }}</div>
+        <div>Age: {{ patient.age }}</div>
+        {% if patient.email %}
+            <div>Email: {{ patient.email }}</div>
+        {% endif %} 
+    </div>
+    <div id="patientMainPane">
+        <div id="patientChartNav">
+            <nav class="navbar navbar-expand-lg">
+                <div id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a id="meds" class="nav-link btn btn-primary">Medications</a>
+                        </li>
+                        {% if patient.email %}
+                            <li class="nav-item">
+                                <a id="message" class="nav-link btn btn-primary">Message</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div id="patientMain">
+            <div id="medsView">
+                <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" class="scrollspy-example bg-body-tertiary p-3 rounded-2" tabindex="0">
+                    <h3>Patient's Medications</h3>
+                    <div id="existingMeds"></div>
+                </div>
+            </div>
+            <div id="addMedsView">
+                <h3>Add Medications</h3>
+                <form method="post" action="/save_meds/{{ patient.id }}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="medName" class="form-label">Med Name</label>
+                      <input required type="text" class="form-control" name="medName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="medDose" class="form-label">Dose Amount</label>
+                        <input required type="number" class="form-control" name="medDose">
+                    </div>
+                    <div class="mb-3">
+                      <label for="doseUnit" class="form-label">Dose Units</label>
+                      <input required type="text" class="form-control" name="doseUnit">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Med</button>
+                  </form>
+            </div>
+            <div id="messageView">
+                <h3>Contact Patient</h3>
+                <form method="post" action="{% url 'ehr:email' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="recipient" class="form-label">To:</label>
+                      <input required type="text" class="form-control" name="recipient" value="{{ patient.email }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject:</label>
+                        <input required type="text" class="form-control" name="subject">
+                    </div>
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Body:</label>
+                        <textarea name="body" cols="30" rows="10" class="form-control"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                  </form>
+            </div> 
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'ehr/patientView.js' %}"></script>
+{% endblock %}

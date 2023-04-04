@@ -1,0 +1,29 @@
+{% extends "ehr/layout.html" %}
+
+{% block body %}
+    <h3>Create New Patient</h3>
+    <form method="post" action="{% url 'ehr:new_patient' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="first_name" class="form-label">First Name</label>
+          <input type="text" class="form-control" name="first_name">
+        </div>
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Last Name</label>
+            <input type="text" class="form-control" name="last_name">
+        </div>
+        <div class="mb-3">
+          <label for="age" class="form-label">Age</label>
+          <input type="number" class="form-control" name="age">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email">
+          </div>
+          <div class="mb-3">
+            <label for="photo" class="form-label">Photo</label>
+            <input type="file" class="form-control" name="photo" accept="image/*">
+          </div>
+        <button type="submit" class="btn btn-primary">Create patient</button>
+      </form>
+{% endblock %}

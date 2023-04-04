@@ -1,0 +1,37 @@
+body * {
+    padding: 5px;
+}
+
+th.photo, td.photo {
+    width: 25%;
+}
+
+table {
+    background-color: lightblue;
+}
+
+div#patientInfoSidebar {
+    width: 25%;
+    background-color: lightblue;
+}
+
+#patientChartNav {
+    background-color: lightseagreen;
+}
+
+#bodyDiv {
+    position: relative;
+    top: 10px;
+}
+
+#patientMainPane {
+    position: absolute;
+    top: 0px;
+    left: 25%;
+    width: 75%;
+}
+
+#medsView {
+    height: 280px;
+    overflow-y: scroll;
+}

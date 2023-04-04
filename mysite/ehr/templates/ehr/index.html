@@ -1,0 +1,74 @@
+{% extends "ehr/layout.html" %}
+{% load static %}
+
+{% block body %}  
+    {% if is_doctor %}
+        <h3>Hello, {{ doctor.first_name }} {{ doctor.last_name }}</h3>
+        <h4>Patients under your care:</h4>
+        <hr>
+        {% if doctor.assigned_patients.all %}
+            <h5>Sort by:</h5>    
+            <ul id="sort" class="list-group list-group-horizontal">
+                <li id="sortDefault" class="list-group-item">Default</li>
+                <li id="sortFirstName" class="list-group-item">First Name</li>
+                <li id="sortLastName" class="list-group-item">Last Name</li>
+                <li id="sortAge" class="list-group-item">Age</li>
+            </ul>
+            <table class="table ">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col" class="photo">Photo</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Age</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for patient in page_obj %}
+                    <tr id='{{patient.id}}' class="patient_row">
+                        <td><a href="{% url 'ehr:patient' patient.id %}">{{ patient.id }}</a></td>
+                        <td class="photo">
+                            {% if patient.photo %}
+                                <img src="{{ patient.photo.url }}" alt="{{ patient.first_name}}" width="50%" height="150">
+                            {% else %}
+                                <h3 class="no_photo" width="50%" height="150">No photo available</h3>
+                            {% endif %}
+                        </td>
+                        <td>{{ patient.first_name }}</td>
+                        <td>{{ patient.last_name }}</td>
+                        <td>{{ patient.age }}</td>  
+                    </tr>
+                  {% empty %}
+                    <h5>You are not responsible for any patients at the moment.</h5>
+                  {% endfor %}
+                </tbody>
+              </table>
+              <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+            
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% else %}
+            <h5>You are not responsible for any patients at the moment.</h5>
+        {% endif %}
+    {% else %}
+        <h3>Only doctors may view patients.</h3>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'ehr/ehr.js' %}"></script>
+{% endblock %}
